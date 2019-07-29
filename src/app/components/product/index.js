@@ -248,7 +248,7 @@ export default class ProductIndex extends React.Component {
                     <Button type="primary" icon='plus' style={{ marginLeft: '10px', backgroundColor: '#1dc3b0', border: 'none' }}
                         onClick={() => {
                             this.setState({ showAddVideo: true, editData: {} });
-                        }}>新增</Button>>
+                        }}>新增</Button>
 
 
                      <Button type="primary" icon='delete' style={{ marginLeft: '10px', background: '#ffa54c', border: 'none' }} onClick={this.handleDelete}>删除</Button>

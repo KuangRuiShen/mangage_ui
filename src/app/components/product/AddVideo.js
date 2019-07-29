@@ -217,24 +217,6 @@ export default class Addvideo extends React.Component {
                     </Col>
                 </Row>
                 <Row>
-                    <Col span={12} >
-                        <FormItem label="视频画质" {...formItemLayout} hasFeedback>
-                            {getFieldDecorator('quality', {
-                                initialValue: editData.quality,
-                                rules: [{
-                                    required: true, message: '视频画质不能为空!'
-                                }]
-                            }
-                            )(
-                                <Select >
-                                    {qualitys.map((item) => {
-                                        return <Option key={item}>{item}</Option>
-                                    })}
-                                </Select>
-
-                            )}
-                        </FormItem>
-                    </Col>
 
                     <Col span={12} >
                         <FormItem label="视频名称" {...formItemLayout} hasFeedback>
@@ -250,41 +232,6 @@ export default class Addvideo extends React.Component {
                         </FormItem>
                     </Col>
 
-                    <Col span={12} >
-                        <FormItem label="所属明星" {...formItemLayout} hasFeedback >
-                            {getFieldDecorator('sid', {
-                                initialValue: editData.sid,
-                                rules: [{
-                                    required: true, message: '所属明星不能为空!'
-                                }]
-                            }
-                            )(
-                                <Select >
-                                    {this.state.stars.map((item) => {
-                                        return <Option key={item.key}>{item.value}</Option>
-                                    })}
-                                </Select>
-                            )}
-                        </FormItem>
-                    </Col>
-
-                    <Col span={12} >
-                        <FormItem label="会员等级" {...formItemLayout} hasFeedback >
-                            {getFieldDecorator('level', {
-                                initialValue: editData.level,
-                                rules: [{
-                                    required: true, message: '会员等级不能为空!'
-                                }]
-                            }
-                            )(
-                                <Select >
-                                    {this.state.levels.map((item) => {
-                                        return <Option key={item.key}>{item.value}</Option>
-                                    })}
-                                </Select>
-                            )}
-                        </FormItem>
-                    </Col>
 
                     <Col span={12} >
                         <FormItem label="序号" {...formItemLayout} >
@@ -299,68 +246,11 @@ export default class Addvideo extends React.Component {
                             )}
                         </FormItem>
                     </Col>
-                    <Col span={12} >
-                        <FormItem label="试看分钟数" {...formItemLayout} >
-                            {getFieldDecorator('watch', {
-                                initialValue: editData.watch || 1,
-                                rules: [{
-                                    required: true, message: '试看分钟数不能为空!'
-                                }]
-                            }
-                            )(
-                                <InputNumber min={1} max={59} />
-                            )}
-                        </FormItem>
-                    </Col>
-
-                    <Col span={12} >
-                        <FormItem label="虚拟时长" {...formItemLayout} >
-                            {getFieldDecorator('time', {
-                                initialValue: editData.time || 1,
-                                rules: [{
-                                    required: true, message: '试看分钟数不能为空!'
-                                }]
-                            }
-                            )(
-                                <InputNumber min={1} max={999} />
-                            )}
-                        </FormItem>
-                    </Col>
+                  
+            
                 </Row>
 
-                <FormItem label="标签" {...formItemLayout} hasFeedback >
-                    {getFieldDecorator('labelIds', {
-                        initialValue: editData.labelIds,
-                    }
-                    )(
-                        <Select
-                            mode="multiple"
-                        >
-                            {this.state.labers.map((item) => {
-                                return <Option key={item.id}>{item.name}</Option>
-                            })}
-                        </Select>
-                    )}
-                </FormItem>
-
-                <FormItem label="所属视频分类" {...formItemLayout} hasFeedback >
-                    {getFieldDecorator('cids', {
-                        initialValue: editData.cids,
-                        rules: [{
-                            required: true, message: '所属视频分类不能为空!'
-                        }]
-                    }
-                    )(
-                        <Select
-                            mode="multiple">
-                            {this.state.categorys.map((item) => {
-                                return <Option key={item.key}>{item.value}</Option>
-                            })}
-                        </Select>
-                    )}
-                </FormItem>
-
-
+    
 
                 <div style={{ padding: 20 }}>
                     <p style={{ textAlign: 'center' }}>视频说明:</p>
