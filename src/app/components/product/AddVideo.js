@@ -29,26 +29,6 @@ export default class Addvideo extends React.Component {
 
 
     componentWillMount() {
-        OwnFetch('star_all').then(res => {
-            if (res && res.code == 200) {
-                this.setState({ stars: res.data })
-            }
-        })
-
-        OwnFetch('label_list').then(res => {
-            if (res && res.code == 200) {
-                this.setState({ labers: res.data })
-            }
-        })
-
-        if (this.props.levels) {
-            this.setState({ levels: this.props.levels })
-        }
-
-        if (this.props.categorys) {
-            this.setState({ categorys: this.props.categorys })
-        }
-
         //有图片
         // console.info("dfsfsd",this.props.editData.imgurl)
         if (this.props.editData.imgurl) {
@@ -75,7 +55,7 @@ export default class Addvideo extends React.Component {
     //点击确定按钮
     handleCreate = () => {
 
-        const { editData, refresh, closePage } = this.props;
+        const { editData, closePage } = this.props;
         const { fileList } = this.state;
 
         this.props.form.validateFields((err, values) => {
@@ -112,8 +92,7 @@ export default class Addvideo extends React.Component {
                     .then(res => {
                         if (res && res.code == '200') {
                             this.props.form.resetFields();
-                            refresh()
-                            closePage();
+                            closePage(true);
                             //刷新数据    
 
                         }
@@ -123,8 +102,7 @@ export default class Addvideo extends React.Component {
                     .then(res => {
                         if (res && res.code == '200') {
                             this.props.form.resetFields();
-                            refresh()
-                            closePage();
+                            closePage(true);
                         }
                     })
             }
