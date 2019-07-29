@@ -1,13 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Route, Router, Link, Redirect, Switch } from 'react-router-dom'
-import {Layout, Icon, Menu} from 'antd';
+import { Layout, Icon, Menu } from 'antd';
 import createHistory from 'history/createHashHistory'
 import { Scrollbars } from 'react-custom-scrollbars';
 import SideBar from '../../app/route/sidebar'
 
 /*工具类*/
-import {getSize} from '../../utils/util'
+import { getSize } from '../../utils/util'
 
 /*公用组件*/
 import NavigationBar from '../navigationBar/index'
@@ -18,24 +18,25 @@ import { allMenu } from '../../app/route/menu' //左侧菜单数据
 
 /*模块*/
 import Login from '../login/index'//登录
-import login_tu from  '../../../assets/images/login.png';
+import login_tu from '../../../assets/images/login.png';
 
 import Welcome from '../../app/components/welcome';//欢迎页
+import Product from '../../app/components/product';
 
-/********************以下是自己写的业务模块开始***************************/
-import User from '../../app/components/user';
+// /********************以下是自己写的业务模块开始***************************/
+// import User from '../../app/components/user';
 
-import Star from '../../app/components/Star/Star';//人
-import Video from '../../app/components/video/Video';//视频
-import Category from '../../app/components/video/Category';//分类
-import Label from '../../app/components/Label';
+// import Star from '../../app/components/Star/Star';//人
+// import Video from '../../app/components/video/Video';//视频
+// import Category from '../../app/components/video/Category';//分类
+// import Label from '../../app/components/Label';
 
-//系统管理
-import UserLogin from '../../app/components/system/UserPage';
-import Pay from '../../app/components/pay'
-import CccePay from '../../app/components/CccePay'
-import UserTab from '../../app/components/SystemManage/User/ManageTab';
-import Comment from '../../app/components/SystemManage/Comment/Comment';
+// //系统管理
+// import UserLogin from '../../app/components/system/UserPage';
+// import Pay from '../../app/components/pay'
+// import CccePay from '../../app/components/CccePay'
+// import UserTab from '../../app/components/SystemManage/User/ManageTab';
+// import Comment from '../../app/components/SystemManage/Comment/Comment';
 
 
 /********************以上是自己写的业务模块结束***************************/
@@ -44,8 +45,8 @@ const { Sider, Content } = Layout;
 const history = createHistory()
 
 @connect((state) => {
-    const { login,dispatch } = state
-    return { login,dispatch}
+    const { login, dispatch } = state
+    return { login, dispatch }
 })
 
 export default class GlobalRoute extends React.Component {
@@ -54,48 +55,46 @@ export default class GlobalRoute extends React.Component {
         this.state = {
             collapsed: false,
             expandedKeys: [],
-            theme:'dark',
-            isadmin:false,
+            theme: 'dark',
+            isadmin: false,
         }
     }
 
-  
+
     componentWillMount() {
         window.dispatch = this.props.dispatch;
-        // this.goLogin();
+        this.goLogin();
     }
 
-    componentWillUpdate(newProps,newState) {
+    componentWillUpdate(newProps, newState) {
         //已经登录
-        // if(newProps.login.data){
+        // if (newProps.login.data) {
         //     // history.replace
-        //     let user = newProps.login.data;
-        //     // console.info("newProps.login.data",user)
-        //     if(user.username == 'admin'){
-                
-        //         if(!this.state.isadmin){
-        //             this.setState({isadmin:true})
-        //         }
-
-        //         let url = window.location.href.split("#")[1];
-        //         if ((url==="/login") || (url==="login") || (url==="/")) {
-        //             history.replace({pathname:'/index'})              
-        //         }
-        //     }else{
-        //         if(this.state.isadmin){
-        //             this.setState({isadmin:false})
-        //         }
-        //         history.replace({pathname:'/user'})
+        //     // let user = newProps.login.data;
+        //     // console.info("newProps.login.data",user
+        //     let url = window.location.href.split("#")[1];
+        //     if ((url === "/login") || (url === "login") || (url === "/")) {
+        //         history.replace({ pathname: '/index' })
         //     }
-        // }else{
-        //     history.replace({pathname:'/login'})
+        // } else {
+        //     history.replace({ pathname: '/login' })
         // }
 
     }
 
 
-    goLogin=()=>{
-         
+    goLogin = () => {
+        let userlogin = sessionStorage.getItem("userLogin") ;
+        // console.info(userlogin);
+        if (userlogin) {
+            let url = window.location.href.split("#")[1];
+            if ((url === "/login") || (url === "login") || (url === "/")) {
+                history.replace({ pathname: '/welcome' })
+            }
+        } else {
+            history.replace({ pathname: '/login' })
+        }
+
     }
 
 
@@ -106,72 +105,67 @@ export default class GlobalRoute extends React.Component {
         });
     }
 
-    changeTheme=(e)=>{
+    changeTheme = (e) => {
         this.setState({
-            theme:e
+            theme: e
         })
     }
 
     render() {
-        const { SubMenu } = Menu;
+        // const { SubMenu } = Menu;
+        this.goLogin();
 
         return (
             <Router history={history}>
                 <Route render={({ location }) => {
-                    return (<div style={{ width: '100%', height: '100%',overflow:'hidden' }}>
-                                <Switch location={location}>
-                                    <Route location={location} exact path="/" render={() => (<Redirect to="/login"/>)}/>
-                                    <Route location={location} path="/login" render={() => <Login/>}/>
-                                    <Route location={location} path="/user" render={() => <User location={location}/>}/>    
-                                    <Route location={location} render={({location}) => {
-                                        return (<div style={{height: '100%'}}>
-                                                <Layout style={{minHeight: '100vh'}}>
-                                                    {/* 左侧菜单栏 */}                                              
-                                                   <Sider
-                                                        trigger={null}
-                                                        collapsible
-                                                        collapsed={this.state.collapsed}
-                                                        width={200}
-                                                        className='sider_menu' >
-                                                            <div className="logo">
-                                                            { this.state.collapsed ? <img style={{height:64}} src={login_tu} />: 
-                                                            <span style={{fontSize:'20px',color:'white'}}>管理平台</span> }      
-                                                            </div>
-                                                         
-                                                            <SideBar theme={this.state.theme} collapsed={this.state.collapsed} />   
-                                                                                              
-                                                    </Sider>                                                                               
-                                                    <Layout>                                                
-                                                        {/* 头部公用组件 */}
-                                                        <Top collapsed={this.state.collapsed} toggle={this.toggle}
-                                                             changeTheme={this.changeTheme}/>
-                                                            <NavigationBar allMenu={allMenu}/>
-                                                            <Scrollbars >  
-                                                            <Content style={{minHeight: getSize().windowH - 108}}>  
-
-                                                            <Switch location={location} key={location.pathname.split('/')[1]}>
-                                                                    <Route location={location} path="/index" render={() => <Category location={location} />} />
-                                                                    <Route location={location} path="/video" render={() => <Video location={location}/>}/>
-                                                                    <Route location={location} path="/userTab" render={() => <UserTab location={location}/>}/>
-                                                                    <Route location={location} path="/comment" render={() => <Comment location={location}/>}/>
-                                                                    <Route location={location} path="/star" render={() => <Star location={location}/>}/>
-                                                                    <Route location={location} path="/label" render={() => <Label location={location}/>}/>
-                                                                    <Route location={location} path="/welcome" render={() => <Welcome location={location}/>}/>
-                                                                    <Route location={location} path="/login_user" render={() => <UserLogin location={location}/>}/>           
-                                                                    <Route location={location} path="/pay" render={() => <Pay location={location}/>}/>  
-                                                                    <Route location={location} path="/cccepay" render={() => <CccePay location={location}/>}/>                                                                                                      
-                                                                    <Route location={location} render={() => <Redirect to='/login' />} /> 
-                                                
-                                                            </Switch>                                                                                    
-                                                            </Content>                                                      
-                                                        </Scrollbars>
-                                                    </Layout>
-                                                </Layout>
+                    return (<div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
+                        <Switch location={location}>
+                            <Route location={location} exact path="/" render={() => (<Redirect to="/login" />)} />
+                            <Route location={location} path="/login" render={() => <Login />} />
+                            <Route location={location} path="/user" render={() => <User location={location} />} />
+                            <Route location={location} render={({ location }) => {
+                                return (<div style={{ height: '100%' }}>
+                                    <Layout style={{ minHeight: '100vh' }}>
+                                        {/* 左侧菜单栏 */}
+                                        <Sider
+                                            trigger={null}
+                                            collapsible
+                                            collapsed={this.state.collapsed}
+                                            width={200}
+                                            className='sider_menu' >
+                                            <div className="logo">
+                                                {this.state.collapsed ? <img style={{ height: 64 }} src={login_tu} /> :
+                                                    <span style={{ fontSize: '20px', color: 'white' }}>管理平台</span>}
                                             </div>
-                                   )}}/>                         
-                                   
-                                </Switch>
-                            </div>                                     
+
+                                            <SideBar theme={this.state.theme} collapsed={this.state.collapsed} />
+
+                                        </Sider>
+                                        <Layout>
+                                            {/* 头部公用组件 */}
+                                            <Top collapsed={this.state.collapsed} toggle={this.toggle}
+                                                changeTheme={this.changeTheme} />
+                                            <NavigationBar allMenu={allMenu} />
+                                            <Scrollbars >
+                                                <Content style={{ minHeight: getSize().windowH - 108 }}>
+
+                                                    <Switch location={location} key={location.pathname.split('/')[1]}>
+                                                        {/* <Route location={location} path="/index" render={() => <Category location={location} />} /> */}
+                                                        <Route location={location} path="/welcome" render={() => <Welcome location={location} />} />
+                                                        <Route location={location} path="/product" render={() => <Product location={location} />} />
+                                                        <Route location={location} render={() => <Redirect to='/login' />} />
+
+                                                    </Switch>
+                                                </Content>
+                                            </Scrollbars>
+                                        </Layout>
+                                    </Layout>
+                                </div>
+                                )
+                            }} />
+
+                        </Switch>
+                    </div>
                     )
                 }} />
             </Router>

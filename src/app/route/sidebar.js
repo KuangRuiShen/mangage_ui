@@ -1,38 +1,43 @@
-import {allMenu} from "./menu";
+import { allMenu } from "./menu";
 import React from "react";
-import {Layout, Icon, Menu} from 'antd';
+import { Layout, Icon, Menu } from 'antd';
 import { Link } from 'react-router-dom'
 
 export default class SideBar extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            openKeys: ['1'],
+            openKeys: ['2'],
             theme: props.theme,
-            selectedKeys: ['0101'],
+            selectedKeys: ['2'],
         }
     }
 
-    componentWillMount(){
+    componentWillMount() {
         let curUrl = window.location.href.split('#')[1];
-        let openKeys=[];
-        let selectedKeys=[];
-        allMenu.forEach(menu=>{
-            if(menu.children){
-                menu.children.forEach(item=>{
-                    if(item.url == curUrl){
-                        selectedKeys.push(item.key)
-                        openKeys.push(menu.key)
-                    }
-                })
+        let openKeys = [];
+        let selectedKeys = [];
+        allMenu.forEach(menu => {
+            if (menu.url == curUrl) {
+                selectedKeys.push(menu.key);
+            }else{
+                if (menu.children) {
+                    menu.children.forEach(item => {
+                        if (item.url == curUrl) {
+                            selectedKeys.push(item.key)
+                            openKeys.push(menu.key);
+                        }
+                    })
+                }
             }
+            
         })
-        this.setState({openKeys,selectedKeys})
-        // console.info("ddd");
-
+        console.info(openKeys, selectedKeys);
+        this.setState({ openKeys, selectedKeys })
+       
     }
 
-    
+
 
     onOpenChange = (openKeys) => {
         const state = this.state;
@@ -52,46 +57,46 @@ export default class SideBar extends React.Component {
         const map = { key };
         return map[key] || [];
     }
-    
-    menuOnclik =(item)=>{
-        let selectedKeys=[];
+
+    menuOnclik = (item) => {
+        let selectedKeys = [];
         selectedKeys.push(item.key)
-        if(item.key.length == 1){      
-            this.setState({selectedKeys,openKeys:[]})
-        }else{
-            this.setState({selectedKeys})
-        }   
+        if (item.key.length == 1) {
+            this.setState({ selectedKeys, openKeys: [] })
+        } else {
+            this.setState({ selectedKeys })
+        }
     }
 
 
 
-    render(){
+    render() {
         const SubMenu = Menu.SubMenu;
 
-        return(
+        return (
             <Menu theme={this.state.theme}
-                  mode="inline"
-                  defaultSelectedKeys={['1']}
-                  openKeys={this.state.openKeys}
-                  selectedKeys={this.state.selectedKeys}
-                  onOpenChange={this.onOpenChange}
-                  onClick={this.menuOnclik}
+                mode="inline"
+                defaultSelectedKeys={['1']}
+                openKeys={this.state.openKeys}
+                selectedKeys={this.state.selectedKeys}
+                onOpenChange={this.onOpenChange}
+                onClick={this.menuOnclik}
             >
                 {allMenu.map((item, index) => {
                     if (item.children && item.children != '') {
                         let htmlct = [];
                         let menuItem = item.children.map((itemM, index) => {
                             return <Menu.Item key={itemM.key}><Link key={1}
-                                                                    to={itemM.url}><Icon
-                                type={itemM.icon}/>
+                                to={itemM.url}><Icon
+                                    type={itemM.icon} />
                                 <span>{itemM.name}</span></Link></Menu.Item>
                         })
                         htmlct.push(<SubMenu key={item.key} title={<span><Icon
-                            type={item.icon}/><span>{item.name}</span></span>}>{menuItem}</SubMenu>)
+                            type={item.icon} /><span>{item.name}</span></span>}>{menuItem}</SubMenu>)
                         return htmlct
                     } else {
                         return <Menu.Item key={item.key}><Link key={1} to={item.url}><Icon
-                            type={item.icon}/> <span>{item.name}</span></Link></Menu.Item>
+                            type={item.icon} /> <span>{item.name}</span></Link></Menu.Item>
                     }
                 })}
             </Menu>

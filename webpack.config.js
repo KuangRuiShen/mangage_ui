@@ -144,7 +144,7 @@ module.exports = {
         historyApiFallback: true,
         proxy: {
 			"/api": {//我们可以在这里设置个口令  
-            "target": "http://127.0.0.1:7001",//target是api服务器地址 
+            "target": "http://127.0.0.1:8080",//target是api服务器地址 
             "changeOrigin": true, //这个是是否替换这里一定要写true  
             "pathRewrite": { //这个是个正则匹配  
                 "^/api": "/"  
