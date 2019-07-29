@@ -280,6 +280,7 @@ export default class ProductIndex extends React.Component {
             </div>
 
             {this.state.showAddVideo && <Addvideo closePage={this.closePage} editData={this.state.editData} />}
+            
            {this.state.showBatchImg && <BatchImg closePage={this.closePage} editData={this.state.editData} refresh={this.onSearch} />}
             {this.state.showUploadVideo && <UploadVideo closePage={this.closePage} editData={this.state.editData} refresh={this.onSearch} />}
 
