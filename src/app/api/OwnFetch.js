@@ -95,11 +95,9 @@ const api = [
 ]
 
 
-const OwnFetch = (request, params,method) => {
+const OwnFetch = (request, params, method) => {
     // let opts = {};
     let url = "";
-    let method = method;
-
     for (let req of api) {
         //处理
         if (req.name === request) {

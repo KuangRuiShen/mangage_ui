@@ -1,24 +1,26 @@
 import React from 'react';
-import { Table, Icon, Modal, Button, Tooltip, Form, message } from 'antd';
+import { Input, Table, Select, Icon, Modal, Button, Switch, Tooltip, Form, message } from 'antd';
+
 import OwnFetch from '../../api/OwnFetch';//封装请求
-import { Pagination } from '../../../utils/util'; //页面
+import AddPage from './AddPage';
 
-import Add from './Add';
+// import UploadVideo from './NewUpload';
 
-
-export default class WelcomeIndex extends React.Component {
+const Option = Select.Option;
+export default class ProductIndex extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            name: "",
             dataSource: [],
             loading: false,
-            editData: {},
-            imgurl: "",
-            showAddStar: false,
-            //当前选中记录
-            selects: [],
+            page: 1,
+            pageSize: 10,
+            total: 0,
+            showImg: false
         }
     }
+
 
 
     nameInputChange = (e) => {
@@ -28,8 +30,6 @@ export default class WelcomeIndex extends React.Component {
     }
 
 
-
-
     componentWillMount() {
         this.initLoadData();
     }
@@ -37,24 +37,39 @@ export default class WelcomeIndex extends React.Component {
     //默认加载数据
     initLoadData = () => {
         this.setState({ loading: true })
-        OwnFetch('welcome', {}).then(res => {
+        let param = { name: this.state.name, page: this.state.page, pageSize: this.state.pageSize };
+
+        OwnFetch('/welcome/query', param).then(res => {
             if (res && res.code == 200) {
-                this.setState({ dataSource: res.data, selects: [] })
+                this.setState({ dataSource: res.data, selects: [], total: res.total })
             }
             this.setState({ loading: false })
         })
     }
 
-    //查询
     onSearch = () => {
-        this.initLoadData();
+        this.setState({ page: 1 }, () => this.initLoadData())
     }
+
+    onRest = () => {
+        this.setState({
+            name: "",
+            cid: '0',
+            level: 'all',
+            category: '0',
+            type: '0',//类型
+            star: '0',
+            page: 1,
+        }, this.onSearch)
+
+    }
+
 
 
     //表格内修改按钮-修改角色按钮
     editOnClick = (record) => {
         this.setState({
-            showAddStar: true,
+            showAddVideo: true,
             editData: record,
         })
     }
@@ -66,14 +81,13 @@ export default class WelcomeIndex extends React.Component {
         // const deleteUsers = this.deleteUsers;
         Modal.confirm({
             title: "删除提示",
-            content: "确定删除所选该类别?",
+            content: "确定删除所选该视频?",
             okText: "删除",
             onOk: () => {
                 this.deleteAll(ids)
             }
         })
     }
-
 
     //批量删除
     handleDelete = () => {
@@ -94,7 +108,7 @@ export default class WelcomeIndex extends React.Component {
     }
 
     deleteAll = (ids) => {
-        OwnFetch('welcome_delete', ids).then(res => {
+        OwnFetch('/welcome/delete', ids, "POST").then(res => {
             if (res && res.code == 200) {
                 Modal.success({ title: "删除成功" })
                 this.onSearch();
@@ -103,16 +117,21 @@ export default class WelcomeIndex extends React.Component {
     }
 
     onSelectChange = (selectedRowKeys, selectedRows) => {
+        // console.info("selectedRowKeys",selectedRowKeys,selectedRows)
         this.setState({ selects: selectedRowKeys });
     }
 
-
-    //关闭页面
-    closePage = () => {
-        this.setState({
-            showAddStar: false,
-        })
+    pageChange = (page, pageSize) => {
+        this.setState({ page, pageSize }, this.initLoadData);
     }
+
+    closePage = (flag) => {
+        this.setState({ showAddVideo: false, showBatchImg: false })
+        if (flag) {
+            this.onSearch();
+        }
+    }
+
 
 
     imgOnClick = (url) => {
@@ -121,54 +140,78 @@ export default class WelcomeIndex extends React.Component {
         }
     }
 
+    uploadImg = (record) => {
+        this.setState({ editData: record, showBatchImg: true })
+
+    }
+
+
+
     render() {
 
-        const columns = [, {
+        const columns = [{
             title: '序号',
-            dataIndex: 'px'
+            dataIndex: 'serial'
         }, {
-                title: '访问地址',
-                dataIndex: 'url',
-            }, {
-                title: '图片',
-                dataIndex: 'imgurl',
-                render: (text, record, index) => <div style={{ height: '50px', cursor: text ? 'pointer' : '' }} onClick={() => this.imgOnClick(record.imgurl)}>
-                    <img style={{ height: '50px' }} src={record.imgurl} />
+            title: '名称',
+            dataIndex: 'title',
+        }, {
+            title: '主图',
+            dataIndex: 'imgurl',
+            render: (text, record, index) => <div style={{ height: '50px', cursor: text ? 'pointer' : '' }} onClick={() => this.imgOnClick(record.imgurl)}>
+                <img style={{ height: '50px' }} src={record.imgurl} />
+            </div>
+        }, {
+            title: '操作',
+            key: 'operate',
+            render: (text, record, index) => (
+                <div>
+                    <Tooltip title="修改">
+                        <Icon type="edit" style={{ fontSize: 16, cursor: 'pointer', color: '#03aaf4', marginRight: '10px' }}
+                            onClick={() => this.editOnClick(record)} />
+                    </Tooltip>
+                    <Tooltip title="删除">
+                        <Icon type="delete" style={{ fontSize: 16, cursor: 'pointer', color: '#03aaf4' }} onClick={() => this.delete(record)} />
+                    </Tooltip>
                 </div>
-            }, {
-                title: '操作',
-                key: 'operate',
-                render: (text, record, index) => (
-                    <div>
-                        <Tooltip title="修改">
-                            <Icon type="edit" style={{ fontSize: 16, cursor: 'pointer', color: '#03aaf4', marginRight: '10px' }}
-                                onClick={() => this.editOnClick(record)} />
-                        </Tooltip>
-                        <Tooltip title="删除">
-                            <Icon type="delete" style={{ fontSize: 16, cursor: 'pointer', color: '#03aaf4' }} onClick={() => this.delete(record)} />
-                        </Tooltip>
-                    </div>
-                ),
-            }];
+            ),
+        }];
+
 
         const FormItem = Form.Item;
 
 
         return (<div className="new_div_context">
 
-            <Form layout="inline" style={{ padding: '20px 0px 0px 20px',height: 30 }} >
+            <Form layout="inline" style={{ padding: '20px 0px 0px 20px' }} >
+                <FormItem label="视频名称：">
+                    <Input
+                        style={{ width: '200px' }}
+                        onChange={this.nameInputChange} value={this.state.name} />
+                </FormItem>
+
+                <FormItem >
+                    <Button type="primary" icon="search" onClick={this.onSearch}>查询</Button>
+                    <Button type="Default" icon="reload" onClick={this.onRest} style={{ marginLeft: '10px' }}  >重置</Button>
+                </FormItem>
+
                 <FormItem style={{ float: 'right', marginLeft: '20px' }}>
+                </FormItem>
+                <FormItem style={{ float: 'right', marginLeft: '20px' }}>
+
                     <Button type="primary" icon='plus' style={{ marginLeft: '10px', backgroundColor: '#1dc3b0', border: 'none' }}
                         onClick={() => {
-                            this.setState({ showAddStar: true, editData: {} });
+                            this.setState({ showAddVideo: true, editData: {} });
                         }}>新增</Button>
+
 
                     <Button type="primary" icon='delete' style={{ marginLeft: '10px', background: '#ffa54c', border: 'none' }} onClick={this.handleDelete}>删除</Button>
                 </FormItem>
 
             </Form>
 
-            <div className="div_space_table" style={{borderTop:'none'}} >
+            <div className="div_space_table" >
+
                 <Table
                     size="small"
                     rowKey="id"
@@ -179,15 +222,24 @@ export default class WelcomeIndex extends React.Component {
                     dataSource={this.state.dataSource}
                     columns={columns}
                     loading={this.state.loading}
-                    pagination={Pagination}
+                    pagination={{
+                        current: this.state.page,
+                        pageSize: this.state.pageSize,
+                        total: this.state.total,
+                        showTotal: (total, range) => `当前${range[0]}-${range[1]}条 总数${total}条`,
+                        showQuickJumper: true,
+                        onChange: this.pageChange,
+                    }}
                 />
             </div>
 
-            {this.state.showAddStar && <Add editData={this.state.editData} closePage={this.closePage} refresh={this.onSearch} />}
+            {this.state.showAddVideo && <AddPage closePage={this.closePage} />}
 
-            {this.state.showImg && <Modal visible footer={null} onCancel={() => this.setState({ showImg: false })}>
+            <Modal visible={this.state.showImg} footer={null} onCancel={() => this.setState({ showImg: false })}>
                 <img style={{ width: '100%' }} src={this.state.imgurl} />
-            </Modal>}
+            </Modal>
+
+
         </div>)
     }
 

@@ -147,7 +147,7 @@ export default class GlobalRoute extends React.Component {
                                                 changeTheme={this.changeTheme} />
                                             <NavigationBar allMenu={allMenu} />
                                             <Scrollbars >
-                                                <Content style={{ minHeight: getSize().windowH - 108 }}>
+                                                <Content style={{ minHeight: getSize().windowH - 128 }}>
 
                                                     <Switch location={location} key={location.pathname.split('/')[1]}>
                                                         {/* <Route location={location} path="/index" render={() => <Category location={location} />} /> */}

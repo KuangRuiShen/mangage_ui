@@ -23,16 +23,6 @@ export default class ProductIndex extends React.Component {
             imgurl: "",
             showImg: false,
             showBatchImg: false,
-            // showUploadVideo: false,
-            levels: [],
-            level: 'all',
-            categorys: [],
-            category: '0',
-            types: [],//页面类型
-            type: '0',//类型
-            stars: [],
-            star: '0',
-
         }
     }
 
@@ -162,29 +152,15 @@ export default class ProductIndex extends React.Component {
 
 
 
-    categoryText = (record) => {
-        let text = "";
-        if (record.categorys.length > 0) {
-            record.categorys.map(item => {
-                text = text + "," + item.name;
-            })
-        }
-        text = text.substring(1);
-        return <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', width: '100px' }}>{text}</div>;
-    }
-
     render() {
 
         const columns = [{
             title: '序号',
-            dataIndex: 'px'
+            dataIndex: 'serial'
         }, {
-            title: '视频名称',
-            dataIndex: 'name',
-            render: (text, record, index) => text + "(" + record.quality + ")"
-        }, {
-            title: '所属明星',
-            dataIndex: 'sname',
+            title: '名称',
+            dataIndex: 'title',
+            // render: (text, record, index) => text + "(" + record.quality + ")"
         }, {
             title: '视频主图',
             dataIndex: 'imgurl',
