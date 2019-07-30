@@ -4,7 +4,7 @@ import { Input, Table, Select, Icon, Modal, Button, Switch, Tooltip, Form, messa
 import OwnFetch from '../../api/OwnFetch';//封装请求
 import Addvideo from './Addvideo';
 import BatchImg from './BatchImg';//批量图片上传
-import UploadVideo from './NewUpload';
+// import UploadVideo from './NewUpload';
 
 const Option = Select.Option;
 export default class ProductIndex extends React.Component {
@@ -23,7 +23,7 @@ export default class ProductIndex extends React.Component {
             imgurl: "",
             showImg: false,
             showBatchImg: false,
-            showUploadVideo: false,
+            // showUploadVideo: false,
             levels: [],
             level: 'all',
             categorys: [],
@@ -46,7 +46,6 @@ export default class ProductIndex extends React.Component {
 
 
     componentWillMount() {
-
         this.initLoadData();
     }
 
@@ -54,16 +53,8 @@ export default class ProductIndex extends React.Component {
     initLoadData = () => {
         this.setState({ loading: true })
         let param = { name: this.state.name, page: this.state.page, pageSize: this.state.pageSize };
-        if (this.state.cid != 0) {
-            param.cid = this.state.cid;
-        }
-        if (this.state.type != 0) {
-            param.type = this.state.type;
-        }
-        if (this.state.star != 0) {
-            param.sid = this.state.star;
-        }
-        OwnFetch('video_list', param).then(res => {
+
+        OwnFetch('/product/query', param).then(res => {
             if (res && res.code == 200) {
                 this.setState({ dataSource: res.data, selects: [], total: res.total })
             }
@@ -132,7 +123,7 @@ export default class ProductIndex extends React.Component {
     }
 
     deleteAll = (ids) => {
-        OwnFetch('video_delete', ids).then(res => {
+        OwnFetch('/product/delete', ids, "POST").then(res => {
             if (res && res.code == 200) {
                 Modal.success({ title: "删除成功" })
                 this.onSearch();
@@ -150,7 +141,7 @@ export default class ProductIndex extends React.Component {
     }
 
     closePage = (flag) => {
-        this.setState({ showAddVideo: false, showBatchImg: false, showUploadVideo: false })
+        this.setState({ showAddVideo: false, showBatchImg: false })
         if (flag) {
             this.onSearch();
         }
@@ -169,9 +160,7 @@ export default class ProductIndex extends React.Component {
 
     }
 
-    uploadVideo = (record) => {
-        this.setState({ editData: record, showUploadVideo: true })
-    }
+
 
     categoryText = (record) => {
         let text = "";
@@ -251,7 +240,7 @@ export default class ProductIndex extends React.Component {
                         }}>新增</Button>
 
 
-                     <Button type="primary" icon='delete' style={{ marginLeft: '10px', background: '#ffa54c', border: 'none' }} onClick={this.handleDelete}>删除</Button>
+                    <Button type="primary" icon='delete' style={{ marginLeft: '10px', background: '#ffa54c', border: 'none' }} onClick={this.handleDelete}>删除</Button>
                 </FormItem>
 
             </Form>
@@ -280,9 +269,9 @@ export default class ProductIndex extends React.Component {
             </div>
 
             {this.state.showAddVideo && <Addvideo closePage={this.closePage} editData={this.state.editData} />}
-            
-           {this.state.showBatchImg && <BatchImg closePage={this.closePage} editData={this.state.editData} refresh={this.onSearch} />}
-            {this.state.showUploadVideo && <UploadVideo closePage={this.closePage} editData={this.state.editData} refresh={this.onSearch} />}
+
+            {this.state.showBatchImg && <BatchImg closePage={this.closePage} editData={this.state.editData} refresh={this.onSearch} />}
+            {/* {this.state.showUploadVideo && <UploadVideo closePage={this.closePage} editData={this.state.editData} refresh={this.onSearch} />} */}
 
             <Modal visible={this.state.showImg} footer={null} onCancel={() => this.setState({ showImg: false })}>
                 <img style={{ width: '100%' }} src={this.state.imgurl} />
