@@ -3,7 +3,7 @@ import { Input, Table, Select, Icon, Modal, Button, Switch, Tooltip, Form, messa
 
 import OwnFetch from '../../api/OwnFetch';//封装请求
 import Addvideo from './Addvideo';
-import BatchImg from './BatchImg';//批量图片上传
+// import BatchImg from './BatchImg';//批量图片上传
 // import UploadVideo from './NewUpload';
 
 const Option = Select.Option;
@@ -167,12 +167,14 @@ export default class ProductIndex extends React.Component {
             render: (text, record, index) => <div style={{ height: '50px', cursor: text ? 'pointer' : '' }} onClick={() => this.imgOnClick(record.imgurl)}>
                 <img style={{ height: '50px' }} src={record.imgurl} />
             </div>
-        }, {
-            title: '视频缩略图',
-            width: 150,
-            dataIndex: 'imgs',
-            render: (text, record, index) => <Button type="primary" icon='file-jpg' onClick={() => this.uploadImg(record)}>上传图片</Button>
-        }, {
+        }, 
+        // {
+        //     title: '视频缩略图',
+        //     width: 150,
+        //     dataIndex: 'imgs',
+        //     render: (text, record, index) => <Button type="primary" icon='file-jpg' onClick={() => this.uploadImg(record)}>上传图片</Button>
+        // },
+         {
             title: '操作',
             key: 'operate',
             render: (text, record, index) => (
@@ -246,7 +248,7 @@ export default class ProductIndex extends React.Component {
 
             {this.state.showAddVideo && <Addvideo closePage={this.closePage} editData={this.state.editData} />}
 
-            {this.state.showBatchImg && <BatchImg closePage={this.closePage} editData={this.state.editData} refresh={this.onSearch} />}
+            {/* {this.state.showBatchImg && <BatchImg closePage={this.closePage} editData={this.state.editData} refresh={this.onSearch} />} */}
             {/* {this.state.showUploadVideo && <UploadVideo closePage={this.closePage} editData={this.state.editData} refresh={this.onSearch} />} */}
 
             <Modal visible={this.state.showImg} footer={null} onCancel={() => this.setState({ showImg: false })}>

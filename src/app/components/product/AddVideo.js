@@ -2,6 +2,7 @@ import React from 'react'
 import { Upload, Form, Modal, InputNumber, Input, Select, Icon, Row, Col } from 'antd'
 
 import OwnFetch from '../../api/OwnFetch';//封装请求
+import BatchImg from './BatchImg';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -82,6 +83,8 @@ export default class Addvideo extends React.Component {
                 values.videourl = editData.videourl;
             }
 
+            let imgs = this.refs.img_rf.getImgs();
+            values.imgs = imgs;
             //给说明赋值
             values.remark = this.state.html;
 
@@ -171,8 +174,6 @@ export default class Addvideo extends React.Component {
             },
         };
 
-        const qualitys = ['蓝光', 'HD']
-
         const { previewVisible, previewImage, fileList } = this.state;
 
         const uploadButton = (
@@ -182,86 +183,86 @@ export default class Addvideo extends React.Component {
             </div>
         );
 
-    return (<Modal
-        width={'60%'}
-        maskClosable={false}
-        visible={this.state.visible}
-        title={editData.id ? '修改视频' : '新增视频'}
-        onCancel={this.onClearFrom}
-        onOk={this.handleCreate}
-    >
-        <Form >
-            <Row>
-                <Col span={6} ></Col>
-                <Col span={18} >
-                    <FormItem label="上传视频主图" {...formItemLayout} >
-                        <div className="clearfix">
-                            <Upload
-                                action={OwnFetch.preurl + "/upload/image"}
-                                listType="picture-card"
-                                fileList={fileList}
-                                // data={fileList}
-                                onPreview={this.handlePreview}
-                                onChange={this.handleChange}
-                                beforeUpload={this.beforeUpload}
-                            >
-                                {fileList.length == 1 ? null : uploadButton}
-                            </Upload>
-                            <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
-                                <img style={{ width: '100%' }} src={previewImage} />
-                            </Modal>
-                        </div>
-                    </FormItem>
-                </Col>
-            </Row>
-            <Row>
-                
-
-                <Col span={12} >
-                    <FormItem label="视频名称" {...formItemLayout} hasFeedback>
-                        {getFieldDecorator('title', {
-                            initialValue: editData.title,
-                            rules: [{
-                                required: true, message: '视频名称不能为空!'
-                            }]
-                        }
-                        )(
-                            <Input placeholder="视频名称不能为空" />
-                        )}
-                    </FormItem>
-                </Col>
+        return (<Modal
+            width={'60%'}
+            maskClosable={false}
+            visible={this.state.visible}
+            title={editData.id ? '修改视频' : '新增视频'}
+            onCancel={this.onClearFrom}
+            onOk={this.handleCreate}
+        >
+            <Form >
+                <Row>
+                    <Col span={6} ></Col>
+                    <Col span={18} >
+                        <FormItem label="上传视频主图" {...formItemLayout} >
+                            <div className="clearfix">
+                                <Upload
+                                    action={OwnFetch.preurl + "/upload/image"}
+                                    listType="picture-card"
+                                    fileList={fileList}
+                                    // data={fileList}
+                                    onPreview={this.handlePreview}
+                                    onChange={this.handleChange}
+                                    beforeUpload={this.beforeUpload}
+                                >
+                                    {fileList.length == 1 ? null : uploadButton}
+                                </Upload>
+                                <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
+                                    <img style={{ width: '100%' }} src={previewImage} />
+                                </Modal>
+                            </div>
+                        </FormItem>
+                    </Col>
+                </Row>
+                <Row>
 
 
-                <Col span={12} >
-                    <FormItem label="序号" {...formItemLayout} >
-                        {getFieldDecorator('serial', {
-                            initialValue: editData.serial || 1,
-                            rules: [{
-                                required: true, message: '序号不能为空!'
-                            }]
-                        }
-                        )(
-                            <InputNumber min={1} max={99999} />
-                        )}
-                    </FormItem>
-                </Col>
-          
-
-            </Row>
+                    <Col span={12} >
+                        <FormItem label="视频名称" {...formItemLayout} hasFeedback>
+                            {getFieldDecorator('title', {
+                                initialValue: editData.title,
+                                rules: [{
+                                    required: true, message: '视频名称不能为空!'
+                                }]
+                            }
+                            )(
+                                <Input placeholder="视频名称不能为空" />
+                            )}
+                        </FormItem>
+                    </Col>
 
 
+                    <Col span={12} >
+                        <FormItem label="序号" {...formItemLayout} >
+                            {getFieldDecorator('serial', {
+                                initialValue: editData.serial || 1,
+                                rules: [{
+                                    required: true, message: '序号不能为空!'
+                                }]
+                            }
+                            )(
+                                <InputNumber min={1} max={99999} />
+                            )}
+                        </FormItem>
+                    </Col>
+                </Row>
+                <FormItem label="省略图"   >
+                    <BatchImg editData={editData} ref="img_rf" />
+                </FormItem>
 
-            <div style={{ padding: 20 }}>
-                <p style={{ textAlign: 'center' }}>视频说明:</p>
-                <MyEditor text={editData.remark} getText={this.getText} />
-            </div>
-            <div style={{ padding: 20, border: 'solid 1px #aeb2b5', borderRadius: '10px' }}>
-                <p style={{ textAlign: 'center' }}>上传视频:</p>
-                <MyUpload editData={editData} geturl={this.geturl} />
-            </div>
 
-        </Form>
+                <div style={{ padding: 20 }}>
+                    <p style={{ textAlign: 'center' }}>视频说明:</p>
+                    <MyEditor text={editData.remark} getText={this.getText} />
+                </div>
+                <div style={{ padding: 20, border: 'solid 1px #aeb2b5', borderRadius: '10px' }}>
+                    <p style={{ textAlign: 'center' }}>上传视频:</p>
+                    <MyUpload editData={editData} geturl={this.geturl} />
+                </div>
 
-    </Modal>)
+            </Form>
+
+        </Modal>)
     }
 }

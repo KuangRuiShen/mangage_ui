@@ -1,5 +1,5 @@
 import React from 'react';
-import { Upload, Button, Icon, message, Modal } from 'antd';
+import { Upload, Button, Icon, Modal } from 'antd';
 import './Upload.css';
 import OwnFetch from '../../api/OwnFetch';//封装请求
 
@@ -15,8 +15,8 @@ export default class BatchImg extends React.Component {
 
     componentWillMount() {
         let editData = this.props.editData;
-        if (this.props.editData) {
-            let vid = editData.id;
+        let vid = editData.id;
+        if (vid) {    
             OwnFetch("/product/images", { id: vid }).then(res => {
                 if (res && res.code == 200) {
                     let imgs = res.data;
@@ -32,12 +32,7 @@ export default class BatchImg extends React.Component {
     }
 
 
-    onClearFrom = () => {
-        this.props.closePage();
-        // this.props.refresh();
-    }
-
-
+ 
     fileChange = ({ file, fileList, event }) => {
         let newData = fileList.filter(element => {
             if (element.status == 'removed') {
@@ -77,18 +72,15 @@ export default class BatchImg extends React.Component {
     }
 
     //确定
-    handleCreate = () => {
+    getImgs = () => {
         const { vid, fileList } = this.state;
         let imgs = fileList.map(item => {
             if (item.url) {
                 return item.url;
             }
         })
-        OwnFetch("/product/images", { id: vid, imgs }, "POST").then(res => {
-            if (res && res.code == 200) {
-                this.props.closePage(true);
-            }
-        })
+       
+        return imgs;
 
     }
 
@@ -97,31 +89,23 @@ export default class BatchImg extends React.Component {
 
     render() {
 
-        const { vid, fileList } = this.state;
+        const { fileList } = this.state;
 
-        return (<Modal
-            width={500}
-            maskClosable={false}
-            visible={true}
-            title={'上传图片'}
-            onCancel={this.onClearFrom}
-            onOk={this.handleCreate}
-        >
+        return ( 
             <div style={{ maxHeight: '480px', overflow: 'auto' }}  >
                 <Upload
                     className='upload-list-inline'
                     action={OwnFetch.preurl + "/upload/image"}
-                    listType='picture'
+                    listType='picture-card'
                     multiple={true}
                     fileList={fileList}
                     onChange={this.fileChange}
                     beforeUpload={this.beforeUpload}
                 >
-                    <Button>
-                        <Icon type="upload" /> upload
-                    </Button>
+                    <div>
+                        <Icon type="plus" />
+                    </div>
                 </Upload>
-            </div>
-        </Modal>)
+            </div>)
     }
 }
