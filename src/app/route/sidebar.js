@@ -32,7 +32,7 @@ export default class SideBar extends React.Component {
             }
             
         })
-        console.info(openKeys, selectedKeys);
+        // console.info(openKeys, selectedKeys);
         this.setState({ openKeys, selectedKeys })
        
     }

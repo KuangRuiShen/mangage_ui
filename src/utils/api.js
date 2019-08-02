@@ -28,6 +28,10 @@ axios.interceptors.response.use((response)=>{
     //     Modal.error({title:'操作错误', content:response.message});
     // }
     if(response.data && response.data.code != 200){
+        if(response.data.code == 401){
+            window.dispatch(clearUserInfo());
+            return;
+        }
         //登录超时
         Modal.error({title:'错误信息', content:response.data.message});
     }
@@ -35,15 +39,18 @@ axios.interceptors.response.use((response)=>{
 },(error)=>{
    
     // console.info("ddd",error.response);
+    if(error.response.status == 401 ){
+        // Modal.error({title:'登录超时', content:"请重新登录！"});
+        window.dispatch(clearUserInfo());
+        return;
+    } 
     if(error.response.status == 504){
                 //登录超时
              Modal.error({title:'系统错误', content:"请联系管理员！"});
             // window.dispatch(clearUserInfo());
         }
      return error.response;
-    // if(error.response.status == 401 ){
-    //     Modal.error({title:'登录超时', content:"请重新登录！"});
-    //     window.dispatch(clearUserInfo());
+ 
     // }else if(error.response.status ==302){
     //     Modal.error({title:'没有该权限', content:error.response.data.message});    
     // }else if(error.response.status == 504){

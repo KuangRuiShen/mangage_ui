@@ -59,9 +59,9 @@ export default class NewUpload extends React.Component {
     }
 
 
-    deleteFile = () => {
-        OwnFetch("delete_file", { id: this.state.vid });
-    }
+    // deleteFile = () => {
+    //     OwnFetch("delete_file", { id: this.state.vid });
+    // }
 
 
     handleUpload = () => {
@@ -196,7 +196,7 @@ export default class NewUpload extends React.Component {
             if (res && res.code == 200) {               
                 this.setState({ videourl: res.data });
                 this.props.geturl( res.data);
-                this.deleteFile();
+                // this.deleteFile();
             }
         })
     }
@@ -241,12 +241,12 @@ export default class NewUpload extends React.Component {
 
         return (
             <div>
-                <FormItem label="视频播放名称" {...formItemLayout} hasFeedback >
+                {/* <FormItem label="视频播放名称" {...formItemLayout} hasFeedback >
                     <Input placeholder="直接修改视频播放地址" 
                         value={this.getInputvideourl()} 
                         disabled={this.state.loading}
                         onChange={this.inputonChange} />
-                </FormItem>
+                </FormItem> */}
                
                 <Upload
                     beforeUpload={this.beforeUpload}

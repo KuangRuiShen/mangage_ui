@@ -23,6 +23,7 @@ export default class ProductIndex extends React.Component {
             imgurl: "",
             showImg: false,
             showBatchImg: false,
+            typeId:props.typeId,
         }
     }
 
@@ -53,7 +54,7 @@ export default class ProductIndex extends React.Component {
     }
 
     onSearch = () => {
-        this.setState({ page: 1 }, () => this.initLoadData())
+        this.setState({ page: 1 },  this.initLoadData)
     }
 
     onRest = () => {
@@ -192,6 +193,7 @@ export default class ProductIndex extends React.Component {
 
 
         const FormItem = Form.Item;
+        const{typeId} = this.state;
 
 
         return (<div className="new_div_context">
@@ -214,7 +216,7 @@ export default class ProductIndex extends React.Component {
 
                     <Button type="primary" icon='plus' style={{ marginLeft: '10px', backgroundColor: '#1dc3b0', border: 'none' }}
                         onClick={() => {
-                            this.setState({ showAddVideo: true, editData: {} });
+                            this.setState({ showAddVideo: true, editData: {typeId} });
                         }}>新增</Button>
 
 

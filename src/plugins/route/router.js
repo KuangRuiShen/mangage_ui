@@ -1,10 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Route, Router, Link, Redirect, Switch } from 'react-router-dom'
-import { Layout, Icon, Menu } from 'antd';
+import { Route, Router, Redirect, Switch } from 'react-router-dom'
+import { Layout } from 'antd';
 import createHistory from 'history/createHashHistory'
 import { Scrollbars } from 'react-custom-scrollbars';
-import SideBar from '../../app/route/sidebar'
+import SideBar from '../../app/route/sidebar';
+
+import { allMenu } from '../../app/route/menu';
 
 /*工具类*/
 import { getSize } from '../../utils/util'
@@ -13,33 +15,13 @@ import { getSize } from '../../utils/util'
 import NavigationBar from '../navigationBar/index'
 import Top from '../header/index'
 
-/*数据*/
-import { allMenu } from '../../app/route/menu' //左侧菜单数据
-
 /*模块*/
 import Login from '../login/index'//登录
 import login_tu from '../../../assets/images/login.png';
 
 import Welcome from '../../app/components/welcome';//欢迎页
 import Product from '../../app/components/product';
-
-// /********************以下是自己写的业务模块开始***************************/
-// import User from '../../app/components/user';
-
-// import Star from '../../app/components/Star/Star';//人
-// import Video from '../../app/components/video/Video';//视频
-// import Category from '../../app/components/video/Category';//分类
-// import Label from '../../app/components/Label';
-
-// //系统管理
-// import UserLogin from '../../app/components/system/UserPage';
-// import Pay from '../../app/components/pay'
-// import CccePay from '../../app/components/CccePay'
-// import UserTab from '../../app/components/SystemManage/User/ManageTab';
-// import Comment from '../../app/components/SystemManage/Comment/Comment';
-
-
-/********************以上是自己写的业务模块结束***************************/
+import Type from '../../app/components/type';
 
 const { Sider, Content } = Layout;
 const history = createHistory()
@@ -79,13 +61,11 @@ export default class GlobalRoute extends React.Component {
         // } else {
         //     history.replace({ pathname: '/login' })
         // }
-
     }
 
 
     goLogin = () => {
-        let userlogin = sessionStorage.getItem("userLogin") ;
-        // console.info(userlogin);
+        let userlogin = sessionStorage.getItem("userLogin");
         if (userlogin) {
             let url = window.location.href.split("#")[1];
             if ((url === "/login") || (url === "login") || (url === "/")) {
@@ -111,6 +91,10 @@ export default class GlobalRoute extends React.Component {
         })
     }
 
+    // getRouts=()=>{
+
+    // }
+
     render() {
         // const { SubMenu } = Menu;
         this.goLogin();
@@ -122,7 +106,6 @@ export default class GlobalRoute extends React.Component {
                         <Switch location={location}>
                             <Route location={location} exact path="/" render={() => (<Redirect to="/login" />)} />
                             <Route location={location} path="/login" render={() => <Login />} />
-                            <Route location={location} path="/user" render={() => <User location={location} />} />
                             <Route location={location} render={({ location }) => {
                                 return (<div style={{ height: '100%' }}>
                                     <Layout style={{ minHeight: '100vh' }}>
@@ -148,13 +131,14 @@ export default class GlobalRoute extends React.Component {
                                             <NavigationBar allMenu={allMenu} />
                                             <Scrollbars >
                                                 <Content style={{ minHeight: getSize().windowH - 128 }}>
-
                                                     <Switch location={location} key={location.pathname.split('/')[1]}>
-                                                        {/* <Route location={location} path="/index" render={() => <Category location={location} />} /> */}
+                                                        <Route location={location} path="/index" render={() => <Category location={location} />} />
                                                         <Route location={location} path="/welcome" render={() => <Welcome location={location} />} />
                                                         <Route location={location} path="/product" render={() => <Product location={location} />} />
+                                                        <Route location={location} path="/type" render={() => <Type location={location} typeId={3}/>} />
                                                         <Route location={location} render={() => <Redirect to='/login' />} />
 
+                                                     
                                                     </Switch>
                                                 </Content>
                                             </Scrollbars>

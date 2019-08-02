@@ -24,6 +24,7 @@ export default class Addvideo extends React.Component {
             levels: [],
             labers: [],
             videourl: undefined,
+            types: [],
         }
     }
 
@@ -38,8 +39,16 @@ export default class Addvideo extends React.Component {
             this.setState({ fileList });
             // console.info("fileList",fileList)
         }
-
+        // this.typeQuery();
     }
+
+    // typeQuery = () => {
+    //     OwnFetch("/type/query").then(res => {
+    //         if (res && res.code == 200) {
+    //             this.setState({ types: res.data })
+    //         }
+    //     })
+    // }
 
     //获取富文本框内容
     getText = (html) => {
@@ -231,7 +240,23 @@ export default class Addvideo extends React.Component {
                             )}
                         </FormItem>
                     </Col>
-
+                    {/* <Col span={12} >
+                        <FormItem label="分类" {...formItemLayout} hasFeedback >
+                            {getFieldDecorator('typeId', {
+                                initialValue: editData.typeId,
+                                rules: [{
+                                    required: true, message: '页面不能为空!'
+                                }]
+                            }
+                            )(
+                                <Select >
+                                    {this.state.types.map((item) => {
+                                        return <Option key={item.id} value={item.id}>{item.name}</Option>
+                                    })}
+                                </Select>
+                            )}
+                        </FormItem>
+                    </Col> */}
 
                     <Col span={12} >
                         <FormItem label="序号" {...formItemLayout} >
