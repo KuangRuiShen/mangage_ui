@@ -59,9 +59,9 @@ export default class NewUpload extends React.Component {
     }
 
 
-    deleteFile = () => {
-        OwnFetch("delete_file", { id: this.state.vid });
-    }
+    // deleteFile = () => {
+    //     OwnFetch("delete_file", { id: this.state.vid });
+    // }
 
 
     handleUpload = () => {
@@ -196,7 +196,7 @@ export default class NewUpload extends React.Component {
             if (res && res.code == 200) {               
                 this.setState({ videourl: res.data });
                 this.props.geturl( res.data);
-                this.deleteFile();
+                // this.deleteFile();
             }
         })
     }
