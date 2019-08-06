@@ -134,33 +134,29 @@ export default class Type extends React.Component {
             title: '序号',
             dataIndex: 'px'
         }, {
-                title: '名称',
-                dataIndex: 'name',
-            }, {
-                title: '说明',
-                dataIndex: 'remark',
-                width: '50%'
-            }, {
-                title: '主图',
-                dataIndex: 'imgurl',
-                render: (text, record, index) => <div style={{ height: '50px', cursor: text ? 'pointer' : '' }} onClick={() => this.imgOnClick(record.imgurl)}>
-                    <img style={{ height: '50px' }} src={record.imgurl} />
-                </div>
-            }, {
-                title: '操作',
-                key: 'operate',
-                render: (text, record, index) => (
-                    <div>
-                        <Tooltip title="修改">
-                            <Icon type="edit" style={{ fontSize: 16, cursor: 'pointer', color: '#03aaf4', marginRight: '10px' }}
-                                onClick={() => this.editOnClick(record)} />
-                        </Tooltip>
-                        {/* <Tooltip title="删除">
+            title: '名称',
+            dataIndex: 'name',
+        }, {
+            title: '主图',
+            dataIndex: 'imgurl',
+            render: (text, record, index) => <div style={{ height: '50px', cursor: text ? 'pointer' : '' }} onClick={() => this.imgOnClick(record.imgurl)}>
+                <img style={{ height: '50px' }} src={record.imgurl} />
+            </div>
+        }, {
+            title: '操作',
+            key: 'operate',
+            render: (text, record, index) => (
+                <div>
+                    <Tooltip title="修改">
+                        <Icon type="edit" style={{ fontSize: 16, cursor: 'pointer', color: '#03aaf4', marginRight: '10px' }}
+                            onClick={() => this.editOnClick(record)} />
+                    </Tooltip>
+                    {/* <Tooltip title="删除">
                             <Icon type="delete" style={{ fontSize: 16, cursor: 'pointer', color: '#03aaf4' }} onClick={() => this.delete(record)} />
                         </Tooltip> */}
-                    </div>
-                ),
-            }];
+                </div>
+            ),
+        }];
 
         const FormItem = Form.Item;
 
@@ -177,19 +173,7 @@ export default class Type extends React.Component {
                 <FormItem >
                     <Button type="primary" icon="search" onClick={this.onSearch}>查询</Button>
                 </FormItem>
-
-                <FormItem style={{ float: 'right', marginLeft: '20px' }}>
-                </FormItem>
-                <FormItem style={{ float: 'right', marginLeft: '20px' }}>
-
-                    {/* <Button type="primary" icon='plus' style={{ marginLeft: '10px', backgroundColor: '#1dc3b0', border: 'none' }}
-                        onClick={() => {
-                            this.setState({ showAddStar: true, editData: {} });
-                        }}>新增</Button> */}
-
-                    {/* <Button type="primary" icon='delete' style={{ marginLeft: '10px', background: '#ffa54c', border: 'none' }} onClick={this.handleDelete}>删除</Button> */}
-                </FormItem>
-
+                
             </Form>
 
             <div className="div_space_table" >

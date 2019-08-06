@@ -73,7 +73,7 @@ export default class BatchImg extends React.Component {
 
     //确定
     getImgs = () => {
-        const { vid, fileList } = this.state;
+        const {  fileList } = this.state;
         let imgs = fileList.map(item => {
             if (item.url) {
                 return item.url;
