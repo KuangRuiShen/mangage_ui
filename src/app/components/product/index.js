@@ -10,6 +10,7 @@ const Option = Select.Option;
 export default class ProductIndex extends React.Component {
     constructor(props) {
         super(props)
+
         this.state = {
             name: "",
             dataSource: [],
@@ -23,7 +24,7 @@ export default class ProductIndex extends React.Component {
             imgurl: "",
             showImg: false,
             showBatchImg: false,
-            typeId:props.typeId,
+            typeId: props.typeId,
         }
     }
 
@@ -37,15 +38,16 @@ export default class ProductIndex extends React.Component {
 
 
     componentWillMount() {
-        this.initLoadData();
+        this.initLoadData()
     }
 
     //默认加载数据
     initLoadData = () => {
         this.setState({ loading: true })
-        let param = { name: this.state.name, page: this.state.page, pageSize: this.state.pageSize };
+        const { typeId, name, page, pageSize } = this.state
 
-        OwnFetch('/product/query', param).then(res => {
+
+        OwnFetch('/product/query', { typeId, name, page, pageSize }).then(res => {
             if (res && res.code == 200) {
                 this.setState({ dataSource: res.data, selects: [], total: res.total })
             }
@@ -54,7 +56,7 @@ export default class ProductIndex extends React.Component {
     }
 
     onSearch = () => {
-        this.setState({ page: 1 },  this.initLoadData)
+        this.setState({ page: 1 }, this.initLoadData)
     }
 
     onRest = () => {
@@ -168,14 +170,14 @@ export default class ProductIndex extends React.Component {
             render: (text, record, index) => <div style={{ height: '50px', cursor: text ? 'pointer' : '' }} onClick={() => this.imgOnClick(record.imgurl)}>
                 <img style={{ height: '50px' }} src={record.imgurl} />
             </div>
-        }, 
+        },
         // {
         //     title: '视频缩略图',
         //     width: 150,
         //     dataIndex: 'imgs',
         //     render: (text, record, index) => <Button type="primary" icon='file-jpg' onClick={() => this.uploadImg(record)}>上传图片</Button>
         // },
-         {
+        {
             title: '操作',
             key: 'operate',
             render: (text, record, index) => (
@@ -193,7 +195,7 @@ export default class ProductIndex extends React.Component {
 
 
         const FormItem = Form.Item;
-        const{typeId} = this.state;
+        const { typeId } = this.state;
 
 
         return (<div className="new_div_context">
@@ -216,7 +218,7 @@ export default class ProductIndex extends React.Component {
 
                     <Button type="primary" icon='plus' style={{ marginLeft: '10px', backgroundColor: '#1dc3b0', border: 'none' }}
                         onClick={() => {
-                            this.setState({ showAddVideo: true, editData: {typeId} });
+                            this.setState({ showAddVideo: true, editData: { typeId } });
                         }}>新增</Button>
 
 

@@ -133,9 +133,12 @@ export default class GlobalRoute extends React.Component {
                                                 <Content style={{ minHeight: getSize().windowH - 128 }}>
                                                     <Switch location={location} key={location.pathname.split('/')[1]}>
                                                         <Route location={location} path="/index" render={() => <Category location={location} />} />
-                                                        <Route location={location} path="/welcome" render={() => <Welcome location={location} />} />
-                                                        <Route location={location} path="/product" render={() => <Product location={location} />} />
-                                                        <Route location={location} path="/type" render={() => <Type location={location} typeId={3}/>} />
+                                                        <Route location={location} path="/welcome" render={() => <Type location={location} />} />
+                                    
+                                                        <Route location={location} path="/zhu" render={() =><Product location={location} typeId={2}/>} />
+                                                        <Route location={location} path="/wu" render={() => <Product location={location} typeId={3}/>} />
+                                                        <Route location={location} path="/yi" render={() => <Product location={location} typeId={4}/>} />
+                                                        <Route location={location} path="/ji" render={() => <Product location={location} typeId={5}/>} />
                                                         <Route location={location} render={() => <Redirect to='/login' />} />
 
                                                      
