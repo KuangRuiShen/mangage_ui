@@ -21,6 +21,7 @@ import login_tu from '../../../assets/images/login.png';
 
 import Welcome from '../../app/components/welcome';//欢迎页
 import Product from '../../app/components/product';
+import Year from '../../app/components/year'
 import Type from '../../app/components/type';
 
 const { Sider, Content } = Layout;
@@ -138,7 +139,9 @@ export default class GlobalRoute extends React.Component {
                                                         <Route location={location} path="/zhu" render={() =><Product location={location} typeId={2}/>} />
                                                         <Route location={location} path="/wu" render={() => <Product location={location} typeId={3}/>} />
                                                         <Route location={location} path="/yi" render={() => <Product location={location} typeId={4}/>} />
-                                                        <Route location={location} path="/ji" render={() => <Product location={location} typeId={5}/>} />
+                                                        <Route location={location} path="/ji1" render={() => <Year location={location} typeId={5}/>} />
+                                                        <Route location={location} path="/ji2" render={() => <Product location={location} typeId={6}/>} />
+                                                        <Route location={location} path="/mu" render={() => <Product location={location} typeId={7}/>} />
                                                         <Route location={location} render={() => <Redirect to='/login' />} />
 
                                                      

@@ -201,7 +201,7 @@ export default class ProductIndex extends React.Component {
         return (<div className="new_div_context">
 
             <Form layout="inline" style={{ padding: '20px 0px 0px 20px' }} >
-                <FormItem label="视频名称：">
+                <FormItem label="名称：">
                     <Input
                         style={{ width: '200px' }}
                         onChange={this.nameInputChange} value={this.state.name} />
