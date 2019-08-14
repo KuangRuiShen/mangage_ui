@@ -27,6 +27,7 @@ export default class Addvideo extends React.Component {
             types: [],
             years: props.years,
             loading: false,
+            showVideo: true,
         }
     }
 
@@ -39,6 +40,10 @@ export default class Addvideo extends React.Component {
             let fileList = [];
             fileList.push({ uid: -1, status: 'done', url: this.props.editData.imgurl });
             this.setState({ fileList });
+        }
+
+        if (this.props.typeId == 5) {
+            this.setState({ showVideo: false })
         }
 
     }
@@ -104,7 +109,7 @@ export default class Addvideo extends React.Component {
                                 //刷新数据    
 
                             }
-                        }).catch(()=>this.setState({loading:false}))
+                        }).catch(() => this.setState({ loading: false }))
                 } else {  //新增 
                     OwnFetch("/product/insert", values, "POST")
                         .then(res => {
@@ -112,7 +117,7 @@ export default class Addvideo extends React.Component {
                                 this.props.form.resetFields();
                                 closePage(true);
                             }
-                        }).catch(()=>this.setState({loading:false}))
+                        }).catch(() => this.setState({ loading: false }))
                 }
             })
         })
@@ -181,7 +186,7 @@ export default class Addvideo extends React.Component {
             },
         };
 
-        const { previewVisible, previewImage, fileList } = this.state;
+        const { previewVisible, previewImage, fileList, showVideo } = this.state;
 
         const uploadButton = (
             <div>
@@ -292,15 +297,16 @@ export default class Addvideo extends React.Component {
                     <BatchImg editData={editData} ref="img_rf" />
                 </FormItem>
 
-
-                <div style={{ padding: 20 }}>
-                    <p style={{ textAlign: 'center' }}>视频说明:</p>
-                    <MyEditor text={editData.remark} getText={this.getText} />
-                </div>
-                <div style={{ padding: 20, border: 'solid 1px #aeb2b5', borderRadius: '10px' }}>
-                    <p style={{ textAlign: 'center' }}>上传视频:</p>
-                    <MyUpload editData={editData} geturl={this.geturl} />
-                </div>
+                {showVideo && <div>
+                    <div style={{ padding: 20 }}>
+                        <p style={{ textAlign: 'center' }}>视频说明:</p>
+                        <MyEditor text={editData.remark} getText={this.getText} />
+                    </div>
+                    <div style={{ padding: 20, border: 'solid 1px #aeb2b5', borderRadius: '10px' }}>
+                        <p style={{ textAlign: 'center' }}>上传视频:</p>
+                        <MyUpload editData={editData} geturl={this.geturl} />
+                    </div>
+                </div>}
 
             </Form>
 
