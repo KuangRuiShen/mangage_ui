@@ -25,7 +25,7 @@ export default class ProductIndex extends React.Component {
             showBatchImg: false,
             typeId: props.typeId,
             years: [],
-            year: new Date().getFullYear(),
+            year: "all",
         }
     }
 
@@ -55,10 +55,11 @@ export default class ProductIndex extends React.Component {
     //默认加载数据
     initLoadData = () => {
         this.setState({ loading: true })
-        const { typeId, name, page, pageSize,year } = this.state
-
-
-        OwnFetch('/product/query', { typeId, name, page, pageSize,year }).then(res => {
+        let { typeId, name, page, pageSize, year } = this.state
+        if (year == "all") {
+            year = "";
+        }
+        OwnFetch('/product/query', { typeId, name, page, pageSize, year }).then(res => {
             if (res && res.code == 200) {
                 this.setState({ dataSource: res.data, selects: [], total: res.total })
             }
@@ -73,6 +74,7 @@ export default class ProductIndex extends React.Component {
     onRest = () => {
         this.setState({
             name: "",
+            year: 'all',
             page: 1,
         }, this.onSearch)
 
@@ -207,9 +209,10 @@ export default class ProductIndex extends React.Component {
         return (<div className="new_div_context">
 
             <Form layout="inline" style={{ padding: '20px 0px 0px 20px' }} >
-               
+
                 <FormItem label="年份：">
-                    <Select style={{width:100}} value={this.state.year} onChange={year=>this.setState({year})}>
+                    <Select style={{ width: 100 }} value={this.state.year} onChange={year => this.setState({ year })}>
+                        <Option value={"all"}>所有</Option>
                         {this.state.years.map((item) => {
                             return <Option key={item} value={item}>{item}</Option>
                         })}
@@ -262,7 +265,7 @@ export default class ProductIndex extends React.Component {
                 />
             </div>
 
-            {this.state.showAddVideo && <Addvideo closePage={this.closePage} editData={this.state.editData} years={this.state.years} />}
+            {this.state.showAddVideo && <Addvideo closePage={this.closePage} editData={this.state.editData} years={this.state.years} typeId={this.state.typeId} />}
 
             {/* {this.state.showBatchImg && <BatchImg closePage={this.closePage} editData={this.state.editData} refresh={this.onSearch} />} */}
             {/* {this.state.showUploadVideo && <UploadVideo closePage={this.closePage} editData={this.state.editData} refresh={this.onSearch} />} */}

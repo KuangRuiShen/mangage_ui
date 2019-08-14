@@ -25,6 +25,8 @@ export default class Addvideo extends React.Component {
             labers: [],
             videourl: undefined,
             types: [],
+            loading: false,
+            showVideo: true,
         }
     }
 
@@ -38,6 +40,9 @@ export default class Addvideo extends React.Component {
             fileList.push({ uid: -1, status: 'done', url: this.props.editData.imgurl });
             this.setState({ fileList });
             // console.info("fileList",fileList)
+        }
+        if (this.props.typeId == 5) {
+            this.setState({ showVideo: false })
         }
         // this.typeQuery();
     }
@@ -97,28 +102,31 @@ export default class Addvideo extends React.Component {
             //给说明赋值
             values.remark = this.state.html;
 
+            values.typeId = this.props.typeId;
             //修改
-            if (editData.id) {
-                values.id = editData.id;
-                OwnFetch("/product/update", values, "POST")
-                    .then(res => {
-                        if (res && res.code == '200') {
-                            this.props.form.resetFields();
-                            closePage(true);
-                            //刷新数据    
+            this.setState({ loading: true }, () => {
+                if (editData.id) {
+                    values.id = editData.id;
+                    OwnFetch("/product/update", values, "POST")
+                        .then(res => {
+                            if (res && res.code == '200') {
+                                this.props.form.resetFields();
+                                closePage(true);
+                                //刷新数据    
 
-                        }
-                    })
-            } else {  //新增 
-                OwnFetch("/product/insert", values, "POST")
-                    .then(res => {
-                        if (res && res.code == '200') {
-                            this.props.form.resetFields();
-                            closePage(true);
-                        }
-                    })
-            }
-        });
+                            }
+                        }).catch(() => this.setState({ loading: false }))
+                } else {  //新增 
+                    OwnFetch("/product/insert", values, "POST")
+                        .then(res => {
+                            if (res && res.code == '200') {
+                                this.props.form.resetFields();
+                                closePage(true);
+                            }
+                        }).catch(() => this.setState({ loading: false }))
+                }
+            })
+        })
 
 
     }
@@ -183,7 +191,7 @@ export default class Addvideo extends React.Component {
             },
         };
 
-        const { previewVisible, previewImage, fileList } = this.state;
+        const { previewVisible, previewImage, fileList, showVideo } = this.state;
 
         const uploadButton = (
             <div>
@@ -199,6 +207,7 @@ export default class Addvideo extends React.Component {
             title={editData.id ? '修改视频' : '新增视频'}
             onCancel={this.onClearFrom}
             onOk={this.handleCreate}
+            confirmLoading={this.state.loading}
         >
             <Form >
                 <Row>
@@ -240,23 +249,6 @@ export default class Addvideo extends React.Component {
                             )}
                         </FormItem>
                     </Col>
-                    {/* <Col span={12} >
-                        <FormItem label="分类" {...formItemLayout} hasFeedback >
-                            {getFieldDecorator('typeId', {
-                                initialValue: editData.typeId,
-                                rules: [{
-                                    required: true, message: '页面不能为空!'
-                                }]
-                            }
-                            )(
-                                <Select >
-                                    {this.state.types.map((item) => {
-                                        return <Option key={item.id} value={item.id}>{item.name}</Option>
-                                    })}
-                                </Select>
-                            )}
-                        </FormItem>
-                    </Col> */}
 
                     <Col span={12} >
                         <FormItem label="序号" {...formItemLayout} >
@@ -276,15 +268,16 @@ export default class Addvideo extends React.Component {
                     <BatchImg editData={editData} ref="img_rf" />
                 </FormItem>
 
-
-                <div style={{ padding: 20 }}>
-                    <p style={{ textAlign: 'center' }}>视频说明:</p>
-                    <MyEditor text={editData.remark} getText={this.getText} />
-                </div>
-                <div style={{ padding: 20, border: 'solid 1px #aeb2b5', borderRadius: '10px' }}>
-                    <p style={{ textAlign: 'center' }}>上传视频:</p>
-                    <MyUpload editData={editData} geturl={this.geturl} />
-                </div>
+                {showVideo && <div>
+                    <div style={{ padding: 20 }}>
+                        <p style={{ textAlign: 'center' }}>视频说明:</p>
+                        <MyEditor text={editData.remark} getText={this.getText} />
+                    </div>
+                    <div style={{ padding: 20, border: 'solid 1px #aeb2b5', borderRadius: '10px' }}>
+                        <p style={{ textAlign: 'center' }}>上传视频:</p>
+                        <MyUpload editData={editData} geturl={this.geturl} />
+                    </div>
+                </div>}
 
             </Form>
 

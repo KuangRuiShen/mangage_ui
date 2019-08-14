@@ -26,6 +26,7 @@ export default class Addvideo extends React.Component {
             videourl: undefined,
             types: [],
             years: props.years,
+            loading: false,
         }
     }
 
@@ -90,29 +91,32 @@ export default class Addvideo extends React.Component {
             values.imgs = imgs;
             //给说明赋值
             values.remark = this.state.html;
-
+            values.typeId = this.props.typeId;
             //修改
-            if (editData.id) {
-                values.id = editData.id;
-                OwnFetch("/product/update", values, "POST")
-                    .then(res => {
-                        if (res && res.code == '200') {
-                            this.props.form.resetFields();
-                            closePage(true);
-                            //刷新数据    
+            this.setState({ loading: true }, () => {
+                if (editData.id) {
+                    values.id = editData.id;
+                    OwnFetch("/product/update", values, "POST")
+                        .then(res => {
+                            if (res && res.code == '200') {
+                                this.props.form.resetFields();
+                                closePage(true);
+                                //刷新数据    
 
-                        }
-                    })
-            } else {  //新增 
-                OwnFetch("/product/insert", values, "POST")
-                    .then(res => {
-                        if (res && res.code == '200') {
-                            this.props.form.resetFields();
-                            closePage(true);
-                        }
-                    })
-            }
-        });
+                            }
+                        }).catch(()=>this.setState({loading:false}))
+                } else {  //新增 
+                    OwnFetch("/product/insert", values, "POST")
+                        .then(res => {
+                            if (res && res.code == '200') {
+                                this.props.form.resetFields();
+                                closePage(true);
+                            }
+                        }).catch(()=>this.setState({loading:false}))
+                }
+            })
+        })
+
 
 
     }
@@ -193,6 +197,7 @@ export default class Addvideo extends React.Component {
             title={editData.id ? '修改视频' : '新增视频'}
             onCancel={this.onClearFrom}
             onOk={this.handleCreate}
+            confirmLoading={this.state.loading}
         >
             <Form >
                 <Row>
@@ -246,6 +251,23 @@ export default class Addvideo extends React.Component {
                                 <Select >
                                     {this.state.years.map((item) => {
                                         return <Option key={item} value={item}>{item}</Option>
+                                    })}
+                                </Select>
+                            )}
+                        </FormItem>
+                    </Col>
+                    <Col span={12} style={{ display: 'none' }}>
+                        <FormItem label="分类" {...formItemLayout} hasFeedback >
+                            {getFieldDecorator('typeId', {
+                                initialValue: editData.typeId,
+                                rules: [{
+                                    required: true, message: '页面不能为空!'
+                                }]
+                            }
+                            )(
+                                <Select >
+                                    {this.state.types.map((item) => {
+                                        return <Option key={item.id} value={item.id}>{item.name}</Option>
                                     })}
                                 </Select>
                             )}

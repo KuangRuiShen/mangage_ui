@@ -34,8 +34,11 @@ export default class Add extends React.Component {
             }
 
             values.imgurl = this.refs.main.getImgUrl();
-            values.logo = this.refs.logo.getImgUrl();
-            values.cover = this.refs.cover.getImgUrl();
+            // values.logo = this.refs.logo.getImgUrl();
+            if (editData.id == '1') {
+                values.cover = this.refs.cover.getImgUrl();
+            }
+
 
             //修改
             if (editData.id) {
@@ -132,9 +135,9 @@ export default class Add extends React.Component {
                     )}
                 </FormItem>
 
-                <FormItem label="logo" {...formItemLayout} >
+                {/* <FormItem label="logo" {...formItemLayout} >
                     <Upload imgurl={editData.logo} ref="logo" />
-                </FormItem>
+                </FormItem> */}
 
                 <FormItem label="主图" {...formItemLayout} >
                     <Upload imgurl={editData.imgurl} ref="main" />
