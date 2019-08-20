@@ -1,14 +1,14 @@
 import React from 'react'
-import { Upload, Form, Modal, InputNumber, Input, Select, Icon, Row, Col } from 'antd'
+import { Form, Modal, InputNumber, Input, Select, Icon, Row, Col } from 'antd'
 
 import OwnFetch from '../../api/OwnFetch';//封装请求
 import BatchImg from './BatchImg';
 
 const FormItem = Form.Item;
-const Option = Select.Option;
 
 import MyEditor from './MyEditor';
 import MyUpload from './Upload';
+import UploadImg from './UploadImg'
 
 @Form.create()
 export default class Addvideo extends React.Component {
@@ -27,6 +27,7 @@ export default class Addvideo extends React.Component {
             types: [],
             loading: false,
             showVideo: true,
+            showRound: false,
         }
     }
 
@@ -44,16 +45,13 @@ export default class Addvideo extends React.Component {
         if (this.props.typeId == 5) {
             this.setState({ showVideo: false })
         }
-        // this.typeQuery();
+        if (this.props.typeId == 2 || this.props.typeId == 3 || this.props.typeId == 4) {
+            this.setState({ showRound: true })
+        }
+
+
     }
 
-    // typeQuery = () => {
-    //     OwnFetch("/type/query").then(res => {
-    //         if (res && res.code == 200) {
-    //             this.setState({ types: res.data })
-    //         }
-    //     })
-    // }
 
     //获取富文本框内容
     getText = (html) => {
@@ -71,7 +69,7 @@ export default class Addvideo extends React.Component {
     handleCreate = () => {
 
         const { editData, closePage } = this.props;
-        const { fileList } = this.state;
+        const { fileList, showRound } = this.state;
 
         this.props.form.validateFields((err, values) => {
             if (err) {
@@ -83,19 +81,14 @@ export default class Addvideo extends React.Component {
                 values.imgurl = editData.imgurl;
             }
 
-            //处理图片
-            if (fileList.length == 1) {
-                if (fileList[0].percent == 100) {
-                    values.imgurl = fileList[0].response;
-                }
-            }
+            let imgurl = this.refs.img_url.getUrl();
+            values.imgurl = imgurl;
 
-            //处理视频上传
-            if (this.state.videourl) {
-                values.videourl = this.state.videourl;
-            } else {
-                values.videourl = editData.videourl;
+            if(showRound){
+                let roundurl = this.refs.round_url.getUrl();
+                values.roundurl = roundurl;
             }
+            
 
             let imgs = this.refs.img_rf.getImgs();
             values.imgs = imgs;
@@ -138,43 +131,6 @@ export default class Addvideo extends React.Component {
     }
 
 
-    //显示图片
-    handlePreview = (file) => {
-        // console.info(file)
-        this.setState({
-            previewImage: file.url || file.thumbUrl,
-            previewVisible: true,
-        });
-    }
-
-    handleCancel = () => this.setState({ previewVisible: false })
-
-
-    handleChange = ({ file, fileList, event }) => {
-        this.setState({ fileList })
-    }
-
-    beforeUpload = (file) => {
-        const isJPG = file.type === 'image/jpeg';
-        const isGIF = file.type === 'image/gif';
-        const isPNG = file.type === 'image/png';
-        if (!isJPG && !isGIF && !isPNG) {
-            Modal.error({
-                content: '必须是JPG/PNG/GIF格式文件',
-            });
-            return false;
-        }
-        const isLt2M = file.size / 1024 / 1024 < 10;
-
-        if (!isLt2M) {
-            Modal.error({
-                content: '图片大小不能超过 10M!',
-            });
-            return false;
-        }
-        // this.setState({imageName:file.name,imageFile:file})
-        return (isJPG || isGIF || isPNG) && isLt2M;
-    }
 
     render() {
         const { getFieldDecorator } = this.props.form;
@@ -188,17 +144,12 @@ export default class Addvideo extends React.Component {
             wrapperCol: {
                 xs: { span: 24 },
                 sm: { span: 14 },
-            },
+            },  
         };
 
-        const { previewVisible, previewImage, fileList, showVideo } = this.state;
+        const { showVideo,showRound  } = this.state;
 
-        const uploadButton = (
-            <div>
-                <Icon type="plus" />
-                <div className="ant-upload-text">Upload</div>
-            </div>
-        );
+
 
         return (<Modal
             width={'60%'}
@@ -211,31 +162,16 @@ export default class Addvideo extends React.Component {
         >
             <Form >
                 <Row>
-                    <Col span={6} ></Col>
-                    <Col span={18} >
-                        <FormItem label="上传视频主图" {...formItemLayout} >
-                            <div className="clearfix">
-                                <Upload
-                                    action={OwnFetch.preurl + "/upload/image"}
-                                    listType="picture-card"
-                                    fileList={fileList}
-                                    // data={fileList}
-                                    onPreview={this.handlePreview}
-                                    onChange={this.handleChange}
-                                    beforeUpload={this.beforeUpload}
-                                >
-                                    {fileList.length == 1 ? null : uploadButton}
-                                </Upload>
-                                <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
-                                    <img style={{ width: '100%' }} src={previewImage} />
-                                </Modal>
-                            </div>
+                    <Col span={12} >
+                        <FormItem label="上传轮播图" {...formItemLayout} >
+                            <UploadImg imgurl={editData.roundurl} ref="round_url" />
                         </FormItem>
                     </Col>
-                </Row>
-                <Row>
-
-
+                    <Col span={12} >
+                        <FormItem label="上传视频主图" {...formItemLayout} >
+                            <UploadImg imgurl={editData.imgurl} ref="img_url" />
+                        </FormItem>
+                    </Col>
                     <Col span={12} >
                         <FormItem label="视频名称" {...formItemLayout} hasFeedback>
                             {getFieldDecorator('title', {
@@ -249,7 +185,6 @@ export default class Addvideo extends React.Component {
                             )}
                         </FormItem>
                     </Col>
-
                     <Col span={12} >
                         <FormItem label="序号" {...formItemLayout} >
                             {getFieldDecorator('serial', {

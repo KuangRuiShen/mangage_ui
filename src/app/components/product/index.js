@@ -25,6 +25,7 @@ export default class ProductIndex extends React.Component {
             showImg: false,
             showBatchImg: false,
             typeId: props.typeId,
+            showRound: false,
         }
     }
 
@@ -38,7 +39,10 @@ export default class ProductIndex extends React.Component {
 
 
     componentWillMount() {
-        this.initLoadData()
+        this.initLoadData();
+        if (this.props.typeId == 2 || this.props.typeId == 3 || this.props.typeId == 4) {
+            this.setState({ showRound: true })
+        }
     }
 
     //默认加载数据
@@ -157,6 +161,8 @@ export default class ProductIndex extends React.Component {
 
     render() {
 
+        let {showRound } = this.state;
+
         const columns = [{
             title: '序号',
             dataIndex: 'serial'
@@ -171,13 +177,44 @@ export default class ProductIndex extends React.Component {
                 <img style={{ height: '50px' }} src={record.imgurl} />
             </div>
         },
-        // {
-        //     title: '视频缩略图',
-        //     width: 150,
-        //     dataIndex: 'imgs',
-        //     render: (text, record, index) => <Button type="primary" icon='file-jpg' onClick={() => this.uploadImg(record)}>上传图片</Button>
-        // },
+       {
+            title: '视频轮播图',
+            width: 150,
+            dataIndex: 'roundurl',
+            render: (text, record, index) => <div style={{ height: '50px', cursor: text ? 'pointer' : '' }} onClick={() => this.imgOnClick(record.roundurl)}>
+                <img style={{ height: '50px' }} src={record.roundurl} />
+            </div>
+        },
         {
+            title: '操作',
+            key: 'operate',
+            render: (text, record, index) => (
+                <div>
+                    <Tooltip title="修改">
+                        <Icon type="edit" style={{ fontSize: 16, cursor: 'pointer', color: '#03aaf4', marginRight: '10px' }}
+                            onClick={() => this.editOnClick(record)} />
+                    </Tooltip>
+                    <Tooltip title="删除">
+                        <Icon type="delete" style={{ fontSize: 16, cursor: 'pointer', color: '#03aaf4' }} onClick={() => this.delete(record)} />
+                    </Tooltip>
+                </div>
+            ),
+        }];
+
+        const columns2 = [{
+            title: '序号',
+            dataIndex: 'serial'
+        }, {
+            title: '名称',
+            dataIndex: 'title',
+            // render: (text, record, index) => text + "(" + record.quality + ")"
+        }, {
+            title: '视频主图',
+            dataIndex: 'imgurl',
+            render: (text, record, index) => <div style={{ height: '50px', cursor: text ? 'pointer' : '' }} onClick={() => this.imgOnClick(record.imgurl)}>
+                <img style={{ height: '50px' }} src={record.imgurl} />
+            </div>
+        },{
             title: '操作',
             key: 'operate',
             render: (text, record, index) => (
@@ -237,7 +274,7 @@ export default class ProductIndex extends React.Component {
                         onChange: this.onSelectChange
                     }}
                     dataSource={this.state.dataSource}
-                    columns={columns}
+                    columns={showRound ?columns :columns2}
                     loading={this.state.loading}
                     pagination={{
                         current: this.state.page,
